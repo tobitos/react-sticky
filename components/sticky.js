@@ -3,9 +3,25 @@ var React = require('react'),
 
 var Sticky = React.createClass({
 
+  hasClass: function (el, cls) {
+    return (' ' + el.className + ' ').indexOf(' ' + cls + ' ') > -1;
+  },
+
+  getClosest: function(el, cls) {
+    do {
+      if (this.hasClass(el, cls)) {
+        // class found, return!
+        return el;
+      }
+    } while (el = el.parentNode);
+
+    return null;
+  },
+
   reset: function() {
     var html = document.documentElement, body = document.body;
     var node = this.getDOMNode();
+    var unstickyNode = this.getClosest(node, this.props.containerByClassName);
 
     this.fixedOffset = this.props.fixedOffset || 0;
 
@@ -13,6 +29,7 @@ var Sticky = React.createClass({
     var classes = node.className;
     node.className = '';
     this.elementOffset = node.getBoundingClientRect().top + windowOffset;
+    this.unstickyOffset = unstickyNode.getBoundingClientRect().bottom + windowOffset;
     node.className = classes;
   },
 
@@ -28,7 +45,7 @@ var Sticky = React.createClass({
 
     if (this.scrolling) {
       this.scrolling = false;
-      if (pageYOffset + this.fixedOffset > this.elementOffset) {
+      if (pageYOffset + this.fixedOffset > this.elementOffset && pageYOffset < this.unstickyOffset) {
         this.setState({ className: this.props.stickyClassName || 'sticky' });
       } else {
         this.setState({ className: '' });
