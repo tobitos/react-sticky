@@ -24,10 +24,8 @@
     "browserify": "^5.10.0",
     "reactify": "^0.14.0"
   },
-  "peerDependencies": {
-    "react": "0.x"
-  },
   "dependencies": {
-    "raf": "^2.0.2"
+    "raf": "^2.0.2",
+    "react": "^0.11.1"
   }
 }
